@@ -1,36 +1,34 @@
 "use client";
-import { useState } from "react";
-import Link from "next/link";
-import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { RegisterFormType } from "../schemas/register-schema";
 import { SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons";
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { LoginFormType } from "../schemas/login-schema";
 import { redirect } from "next/navigation";
 
-export function RegisterForm() {
+export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const { register: registerUser, registerForm } = useAuth();
+  const { login, loginForm } = useAuth();
 
   const {
     handleSubmit,
     formState: { isSubmitting },
-  } = registerForm;
+  } = loginForm;
 
-  const onSubmit = async (data: RegisterFormType) => {
+  const onSubmit = async (data: LoginFormType) => {
     try {
-      await registerUser(data.email, data.password);
+      await login(data.email, data.password);
       redirect("/");
     } catch (error) {
       console.log(error);
@@ -42,14 +40,14 @@ export function RegisterForm() {
       <Card>
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">
-            Crear cuenta
+            Bienvenido
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...registerForm}>
+          <Form {...loginForm}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <FormField
-                control={registerForm.control}
+                control={loginForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -58,10 +56,11 @@ export function RegisterForm() {
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
                       <FormControl>
                         <Input
-                          id="email-register"
+                          id="email-login"
                           type="email"
                           placeholder="tu@email.com"
                           className="pl-10"
+                          autoFocus
                           {...field}
                         />
                       </FormControl>
@@ -72,16 +71,25 @@ export function RegisterForm() {
               />
 
               <FormField
-                control={registerForm.control}
+                control={loginForm.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Contraseña</FormLabel>
+                    <div className="flex justify-between">
+                      <FormLabel>Contraseña</FormLabel>
+                      <Link
+                        href="/forgot-password"
+                        className="text-xs hover:underline"
+                        tabIndex={-1}
+                      >
+                        ¿Olvidaste tu contraseña?
+                      </Link>
+                    </div>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
                       <FormControl>
                         <Input
-                          id="password-register"
+                          id="password-login"
                           type={showPassword ? "text" : "password"}
                           placeholder="••••••••"
                           className="pl-10 pr-10"
@@ -90,7 +98,7 @@ export function RegisterForm() {
                       </FormControl>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant={"ghost"}
                         onClick={() => setShowPassword((v) => !v)}
                         className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent hover:border-transparent dark:hover:bg-transparent cursor-pointer"
                         tabIndex={-1}
@@ -107,48 +115,12 @@ export function RegisterForm() {
                 )}
               />
 
-              <FormField
-                control={registerForm.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar contraseña</FormLabel>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <FormControl>
-                        <Input
-                          id="confirm-password-register"
-                          type={showConfirm ? "text" : "password"}
-                          placeholder="••••••••"
-                          className="pl-10 pr-10"
-                          {...field}
-                        />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => setShowConfirm((v) => !v)}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent hover:border-transparent dark:hover:bg-transparent cursor-pointer"
-                        tabIndex={-1}
-                      >
-                        {showConfirm ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <Button
                 type="submit"
-                className="w-full mt-2"
+                className="w-full mt-2 mb-0"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Creando cuenta..." : "Registrarse"}
+                {isSubmitting ? "Ingresando..." : "Iniciar sesión"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
 
@@ -176,9 +148,12 @@ export function RegisterForm() {
 
               <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 <p>
-                  ¿Ya tienes una cuenta?{" "}
-                  <Link href="/login" className="hover:underline font-medium">
-                    Inicia sesión
+                  ¿No tienes una cuenta?{" "}
+                  <Link
+                    href="/register"
+                    className="hover:underline font-medium"
+                  >
+                    Regístrate
                   </Link>
                 </p>
               </div>

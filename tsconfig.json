@@ -29,10 +29,7 @@
       "logger": [
         "./lib/logger.ts"
       ]
-    },
-    "types": [
-      "@testing-library/jest-dom"
-    ],
+    }
   },
   "include": [
     "next-env.d.ts",
