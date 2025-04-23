@@ -20,7 +20,7 @@ export const Navbar = () => {
         </Link>
         <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
-            <NavLink key={item.href} href={item.href}>
+            <NavLink key={item.url} href={item.url}>
               {item.label}
             </NavLink>
           ))}

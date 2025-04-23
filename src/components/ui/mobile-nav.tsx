@@ -30,8 +30,8 @@ export function MobileNav() {
           <nav className="flex flex-col gap-4 ">
             {navItems.map((item) => (
               <Link
-                key={item.href}
-                href={item.href}
+                key={item.url}
+                href={item.url}
                 className="text-lg font-medium transition-colors hover:text-primary py-2 border-b border-border  px-4"
                 onClick={() => setOpen(false)}
               >

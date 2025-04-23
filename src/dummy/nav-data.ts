@@ -1,14 +1,20 @@
-import { Github, Mail } from "lucide-react";
+import { Github, icons, Mail } from "lucide-react";
 
-interface NavItem {
-  href: string;
-  label: string;
+export interface NavItem {
+  title: string;
+  url: string;
+  disabled?: boolean;
+  external?: boolean;
+  shortcut?: [string, string];
+  icon?: keyof typeof icons;
+  label?: string;
+  description?: string;
+  isActive?: boolean;
+  items?: NavItem[];
 }
 
 export const navItems: NavItem[] = [
-  { href: "#section1", label: "Section 1" },
-  { href: "#section2", label: "Section 2" },
-  { href: "#section3", label: "Section 3" },
+  { url: "#section1", title: "Section 1", icon: "House" },
 ];
 
 export const navSocialLinks = [
